@@ -92,6 +92,11 @@ public class DataPesanan extends javax.swing.JFrame {
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
         });
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(table);
 
         Nota.setHorizontalAlignment(javax.swing.JTextField.LEFT);
@@ -316,6 +321,12 @@ public class DataPesanan extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_keluarActionPerformed
+
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        // TODO add your handling code here:
+        int row = table.getSelectedRow();
+        Nota.setText(""+table.getValueAt(row,0));
+    }//GEN-LAST:event_tableMouseClicked
 
     /**
      * @param args the command line arguments
