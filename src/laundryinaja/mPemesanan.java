@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 
 /**
  *
@@ -439,6 +440,7 @@ public class mPemesanan extends javax.swing.JFrame {
             data.insertPesanan(fnota, fnama, fjumlah , ftipe,fharga, ftglAntar, ftglSelesai , fcatatan);
             mPemesanan frame = new mPemesanan("Waiting",this.urut);
             frame.setVisible(true);
+            frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
             dispose();
         }else if(dialogButton == JOptionPane.NO_OPTION){
             
@@ -460,6 +462,7 @@ public class mPemesanan extends javax.swing.JFrame {
                     db.updateStatus(Nota.getText(), "Proses");
                     mPemesanan frame = new mPemesanan(status,this.urut);
                     frame.setVisible(true);
+                    frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
                     dispose();
                 }else if(dialogButton == JOptionPane.NO_OPTION){
                     
@@ -490,6 +493,7 @@ public class mPemesanan extends javax.swing.JFrame {
                     db.updateStatus(Nota.getText(), "Selesai");
                     mPemesanan frame = new mPemesanan(status,this.urut);
                     frame.setVisible(true);
+                    frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
                     dispose();
                     break;
                 }else if(dialogButton ==  JOptionPane.NO_OPTION){
@@ -652,6 +656,7 @@ public class mPemesanan extends javax.swing.JFrame {
                     data.insertLaporan(nota, tgl.getTanggal(), desc, harga);
                     mPemesanan frame = new mPemesanan(status,this.urut);
                     frame.setVisible(true);
+                    frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
                     dispose();
                     break;
                 }else if(dialogButton ==  JOptionPane.NO_OPTION){
