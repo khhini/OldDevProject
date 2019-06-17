@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
  * @author kiki
  */
 public class Pemesanan {
-    double hitungHarga(double harga, int jumlah){
+    double hitungHarga(double harga, double jumlah){
         double totalHarga = jumlah* harga;
         return totalHarga;
     }

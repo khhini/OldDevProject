@@ -124,7 +124,7 @@ public class Database {
         String user = "root";
         String pass = null;
         String sql = "insert into pesanan values('"+notaPesan+"','"+namaPemesan+"','"+jumlah+"','"
-                +tipePesanan+"','"+harga+"','"+tglAntar+"','"+tglSelesai+"','"+catatan+"','waiting')";
+                +tipePesanan+"','"+harga+"','"+tglAntar+"','"+tglSelesai+"','"+catatan+"','Waiting')";
         
         try{
             Class.forName("com.mysql.jdbc.Driver");

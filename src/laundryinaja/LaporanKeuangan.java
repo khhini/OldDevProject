@@ -27,8 +27,8 @@ public class LaporanKeuangan extends javax.swing.JFrame {
         String nota;
         String tgl ;
         String desc;
-        double pkeluar;
-        double pmasuk;
+        String pkeluar;
+        String pmasuk;
 
         DefaultTableModel tab = new DefaultTableModel(new String[]{"Nota","Tanggal",
             "Deskripsi","Pengeluaran","Pemasukan"}, 0);
@@ -47,8 +47,8 @@ public class LaporanKeuangan extends javax.swing.JFrame {
                 nota = result.getString("notaLaporan");
                 tgl = result.getString("tanggal");
                 desc = result.getString("deskripsi");
-                pkeluar = result.getDouble("pengeluaran");
-                pmasuk = result.getDouble("pemasukan");
+                pkeluar = result.getString("pengeluaran");
+                pmasuk = result.getString("pemasukan");
                 tab.addRow(new Object[]{nota,tgl,desc,pkeluar,pmasuk});
             }
             tLaporan.setModel(tab);

@@ -37,6 +37,8 @@ public class RekapLaporan extends javax.swing.JFrame {
         double tmasuk = 0;
         double pkeluar;
         double pmasuk;
+        String okeluar;
+        String omasuk;
 
         DefaultTableModel tab = new DefaultTableModel(new String[]{"Nota","Tanggal",
             "Deskripsi","Pengeluaran","Pemasukan"}, 0);
@@ -56,10 +58,12 @@ public class RekapLaporan extends javax.swing.JFrame {
                 tgl = result.getString("tanggal");
                 desc = result.getString("deskripsi");
                 pkeluar = result.getDouble("pengeluaran");
+                okeluar = result.getString("pengeluaran");
                 tkeluar += pkeluar;
                 pmasuk = result.getDouble("pemasukan");
+                omasuk = result.getString("pemasukan");
                 tmasuk += pmasuk;
-                tab.addRow(new Object[]{nota,tgl,desc,pkeluar,pmasuk});
+                tab.addRow(new Object[]{nota,tgl,desc,okeluar,omasuk});
             }
             tLaporan.setModel(tab);
         }catch(ClassNotFoundException | SQLException e){
