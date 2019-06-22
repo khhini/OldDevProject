@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 17, 2019 at 09:29 PM
+-- Generation Time: Jun 22, 2019 at 10:26 AM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.3.0
 
@@ -41,16 +41,9 @@ CREATE TABLE `laporan` (
 --
 
 INSERT INTO `laporan` (`notaLaporan`, `tanggal`, `deskripsi`, `pengeluaran`, `pemasukan`) VALUES
-('PK-190403-01', '2019-04-03', 'sabun 2 bungkus', 20000, NULL),
-('PK-190530-01', '2019-05-30', 'Listrik', 453000, NULL),
-('PK-190605-01', '2019-06-05', 'Pembayaran Wifi', 481000, NULL),
-('PK-190607-01', '2019-06-07', 'test', 10000, NULL),
-('PS-190521-01', '2019-05-30', 'cucian 5.0 kg Atas Nama kiki', NULL, 25000),
-('PS-190521-02', '2019-06-18', 'cucian javax.swing.JTextField[,108,91,122x27,layout=javax.swing.plaf.basic.BasicTextUI$UpdateHandler,alignmentX=0.0,alignmentY=0.0,border=javax.swing.plaf.synth.SynthBorder@483943b6,flags=288,maximumSize=,minimumSize=,preferredSize=,caretColor=,disabledTextColor=DerivedColor(color=142,143,145 parent=nimbusDisabledText offsets=0.0,0.0,0.0,0 pColor=142,143,145,editable=true,margin=javax.swing.plaf.InsetsUIResource[top=0,left=0,bottom=0,right=0],selectedTextColor=DerivedColor(color=255,255,255 parent=nimbusSelectedText offsets=0.0,0.0,0.0,0 pColor=255,255,255,selectionColor=DerivedColor(color=57,105,138 parent=nimbusSelectionBackground offsets=0.0,0.0,0.0,0 pColor=57,105,138,columns=0,columnWidth=0,command=,horizontalAlignment=LEADING] kg Atas Nama Kaka', NULL, 6000),
-('PS-190527-02', '2019-06-17', 'cucian 5.0 kg Atas Nama juan', NULL, 25000),
-('PS-190528-01', '2019-06-17', 'cucian javax.swing.JTextField[,108,91,122x27,layout=javax.swing.plaf.basic.BasicTextUI$UpdateHandler,alignmentX=0.0,alignmentY=0.0,border=javax.swing.plaf.synth.SynthBorder@5734587,flags=288,maximumSize=,minimumSize=,preferredSize=,caretColor=,disabledTextColor=DerivedColor(color=142,143,145 parent=nimbusDisabledText offsets=0.0,0.0,0.0,0 pColor=142,143,145,editable=true,margin=javax.swing.plaf.InsetsUIResource[top=0,left=0,bottom=0,right=0],selectedTextColor=DerivedColor(color=255,255,255 parent=nimbusSelectedText offsets=0.0,0.0,0.0,0 pColor=255,255,255,selectionColor=DerivedColor(color=57,105,138 parent=nimbusSelectionBackground offsets=0.0,0.0,0.0,0 pColor=57,105,138,columns=0,columnWidth=0,command=,horizontalAlignment=LEADING] kg Atas Nama bedil', NULL, 5000),
-('PS-190528-02', '2019-06-17', 'cucian 4.0 kg Atas Nama da', NULL, 20000),
-('PS-190617-01', '2019-06-18', 'cucian javax.swing.JTextField[,108,91,122x27,layout=javax.swing.plaf.basic.BasicTextUI$UpdateHandler,alignmentX=0.0,alignmentY=0.0,border=javax.swing.plaf.synth.SynthBorder@138e3916,flags=288,maximumSize=,minimumSize=,preferredSize=,caretColor=,disabledTextColor=DerivedColor(color=142,143,145 parent=nimbusDisabledText offsets=0.0,0.0,0.0,0 pColor=142,143,145,editable=true,margin=javax.swing.plaf.InsetsUIResource[top=0,left=0,bottom=0,right=0],selectedTextColor=DerivedColor(color=255,255,255 parent=nimbusSelectedText offsets=0.0,0.0,0.0,0 pColor=255,255,255,selectionColor=DerivedColor(color=57,105,138 parent=nimbusSelectionBackground offsets=0.0,0.0,0.0,0 pColor=57,105,138,columns=0,columnWidth=0,command=,horizontalAlignment=LEADING] kg Atas Nama Kiki', NULL, 12500);
+('PS-190622-01', '2019-06-22', 'Pesanan Tanggal2019-06-22 Atas Nama Kiki', NULL, 70000),
+('PS-190622-02', '2019-06-22', 'Pesanan Tanggal2019-06-22 Atas Nama Abdi', NULL, 25000),
+('PS-190622-03', '2019-06-22', 'Pesanan Tanggal2019-06-22 Atas Nama Adit', NULL, 120000);
 
 -- --------------------------------------------------------
 
@@ -61,12 +54,9 @@ INSERT INTO `laporan` (`notaLaporan`, `tanggal`, `deskripsi`, `pengeluaran`, `pe
 CREATE TABLE `pesanan` (
   `notaPesanan` varchar(12) NOT NULL,
   `namaPemesan` varchar(20) DEFAULT NULL,
-  `jumlah` int(3) DEFAULT NULL,
-  `tipePemesanan` varchar(10) DEFAULT NULL,
-  `harga` int(6) DEFAULT NULL,
   `tanggalAntar` date DEFAULT NULL,
   `tanggalSelesai` date DEFAULT NULL,
-  `catatan` text,
+  `total` int(11) DEFAULT NULL,
   `status` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -74,21 +64,36 @@ CREATE TABLE `pesanan` (
 -- Dumping data for table `pesanan`
 --
 
-INSERT INTO `pesanan` (`notaPesanan`, `namaPemesan`, `jumlah`, `tipePemesanan`, `harga`, `tanggalAntar`, `tanggalSelesai`, `catatan`, `status`) VALUES
-('PS-190521-01', 'kiki', 5, 'kg', 5000, '2019-05-21', '2019-05-23', 'tidak perlu\n', 'Diambil'),
-('PS-190521-02', 'Kaka', 3, 'kg', 6000, '2019-05-21', '2019-05-22', 'iya', 'Diambil'),
-('PS-190521-03', 'kiki', 5, 'item', 10000, '2019-05-21', '2019-05-23', 'tidak', 'Selesai'),
-('PS-190521-04', 'Kiki', 5, 'item', 10000, '2019-05-21', '2019-05-23', 'tidak', 'Selesai'),
-('PS-190523-01', 'abdi', 2, 'kg', 5000, '2019-05-23', '2019-05-25', '-', 'Selesai'),
-('PS-190523-02', 'ditya', 3, 'kg', 6000, '2019-05-23', '2019-05-24', '-', 'Selesai'),
-('PS-190527-01', 'bucin', 1, 'kg', 5000, '2019-05-27', '2019-05-29', 'ABC\n', 'Selesai'),
-('PS-190527-02', 'juan', 5, 'kg', 5000, '2019-05-27', '2019-05-30', 'Mau cepat', 'Diambil'),
-('PS-190528-01', 'bedil', 3, 'kg', 5000, '2019-05-28', '2019-05-30', 'pengen pakai molto', 'Diambil'),
-('PS-190528-02', 'da', 4, 'kg', 5000, '2019-05-28', '2019-05-31', 'segera selesaikan, jika tidak saya marah', 'Diambil'),
-('PS-190616-01', 'Martin', 5, 'kg', 6000, '2019-06-16', '2019-06-17', 'Cepat sekarang cucikan', 'Proses'),
-('PS-190617-01', 'Kiki', 3, 'kg', 12500, '2019-06-17', '2019-06-19', 'Sudah', 'Diambil'),
-('PS-190617-02', 'Kiki', 5, 'kg', 25500, '2019-06-17', '2019-06-19', 'Selesaikan', 'Waiting'),
-('PS-190618-01', 'Winny', 4, 'kg', 20000, '2019-06-18', '2019-06-20', 'tidak', 'Selesai');
+INSERT INTO `pesanan` (`notaPesanan`, `namaPemesan`, `tanggalAntar`, `tanggalSelesai`, `total`, `status`) VALUES
+('PS-190622-01', 'Kiki', '2019-06-22', '2019-06-24', 70000, 'Diambil'),
+('PS-190622-02', 'Abdi', '2019-06-22', '2019-06-24', 25000, 'Diambil'),
+('PS-190622-03', 'Adit', '2019-06-22', '2019-06-24', 120000, 'Diambil'),
+('PS-190622-04', NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subpesanan`
+--
+
+CREATE TABLE `subpesanan` (
+  `noSubPesanan` varchar(14) NOT NULL,
+  `notaPesanan` varchar(12) DEFAULT NULL,
+  `jumlah` float DEFAULT NULL,
+  `jenis` varchar(20) DEFAULT NULL,
+  `harga` int(6) DEFAULT NULL,
+  `catatan` text
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `subpesanan`
+--
+
+INSERT INTO `subpesanan` (`noSubPesanan`, `notaPesanan`, `jumlah`, `jenis`, `harga`, `catatan`) VALUES
+('PS-190622-0101', 'PS-190622-01', 12, 'kg', 60000, 'Pisahkan Pakaian Putih'),
+('PS-190622-0102', 'PS-190622-01', 1, 'item', 10000, 'Hilangkan Noda'),
+('PS-190622-0201', 'PS-190622-02', 5, 'kg', 25000, 'Pakai Rinso'),
+('PS-190622-0301', 'PS-190622-03', 12, 'item', 120000, 'Cuci satu satu');
 
 --
 -- Indexes for dumped tables
@@ -105,6 +110,23 @@ ALTER TABLE `laporan`
 --
 ALTER TABLE `pesanan`
   ADD PRIMARY KEY (`notaPesanan`);
+
+--
+-- Indexes for table `subpesanan`
+--
+ALTER TABLE `subpesanan`
+  ADD PRIMARY KEY (`noSubPesanan`),
+  ADD KEY `notaPesanan` (`notaPesanan`);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `subpesanan`
+--
+ALTER TABLE `subpesanan`
+  ADD CONSTRAINT `subpesanan_ibfk_1` FOREIGN KEY (`notaPesanan`) REFERENCES `pesanan` (`notaPesanan`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
