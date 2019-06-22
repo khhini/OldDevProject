@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -24,6 +25,7 @@ public class mPengeluaran extends javax.swing.JFrame {
      */
     public mPengeluaran() {
         initComponents();
+        this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
     }
 
     /**
@@ -175,12 +177,12 @@ public class mPengeluaran extends javax.swing.JFrame {
             }
         ));
         tPengeluaran.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 tPengeluaranAncestorAdded(evt);
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
         });
         jScrollPane2.setViewportView(tPengeluaran);
@@ -240,6 +242,7 @@ public class mPengeluaran extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void KonfirmasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KonfirmasiActionPerformed

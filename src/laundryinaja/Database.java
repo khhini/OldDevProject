@@ -15,7 +15,36 @@ import java.sql.Statement;
  * @author kiki
  */
 public class Database {
+    void Konfirmasi(String nota,double harga){
+        Connection conn = null;
+        Statement stmt = null;
+        
+        
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(host,user,pass);
+            stmt = conn.createStatement();
+            String sql = "update pesanan set total = '"+harga+"', status = 'Baru' where notaPesanan = '"+nota+"'";
+            stmt.executeUpdate(sql);
+            
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
     String getNota(String tanggal){
+        this.hapusNota();
         Connection conn = null;
         Statement stmt = null;
         ResultSet result = null;
@@ -65,6 +94,92 @@ public class Database {
         //*/
         return nota;
     }
+    public void hapusNota(){
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet result = null;
+        
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        String sqlNota = "select * from pesanan where status is null or status = ''";
+        String nota ="";
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(host,user,pass);
+            stmt = conn.createStatement();
+            result = stmt.executeQuery(sqlNota);
+            if(result.first()){
+                nota = result.getString("notaPesanan");
+            }
+            String sql = "delete from subpesanan where notaPesanan = '"+nota+"'";
+            stmt.executeUpdate(sql);
+            sql = "delete from pesanan where status is null or status = ''";
+            stmt.executeUpdate(sql);
+            
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    String getSubNota(String nota){
+            Connection conn = null;
+        Statement stmt = null;
+        ResultSet result = null;
+        String subNota = "";
+        
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        String sql = "select noSubPesanan from subpesanan where noSubPesanan like '"+nota+"%' order by "
+                + "noSubPesanan desc";
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(host,user,pass);
+            stmt = conn.createStatement();
+            result = stmt.executeQuery(sql);
+            if(result.first()){
+                subNota = result.getString("noSubPesanan");
+            }else{
+                subNota = "";
+            }
+            
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                conn.close();
+                result.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        if(subNota.length()>0){
+            if(subNota.substring(0, 12).equals(nota)){
+                int tmp = Integer.parseInt(subNota.substring(13))+1;
+                if(tmp <  10){
+                    subNota = subNota.substring(0,12)+"0"+tmp;
+                }else{
+                    subNota = subNota.substring(0,12)+tmp;
+                }
+            }else{
+                subNota = subNota.substring(0,12)+"01";
+            }
+        }else{
+            subNota = nota+"01";
+        }
+        
+        return subNota;
+    }
     String getNotaPengeluaran(String tanggal){
         Connection conn = null;
         Statement stmt = null;
@@ -113,18 +228,75 @@ public class Database {
             nota = "PK-"+tanggal+"-01";
         }
         //*/
+        
         return nota;
     }
-    void insertPesanan(String notaPesan, String namaPemesan, double jumlah, String tipePesanan, 
-            double harga, String tglAntar, String tglSelesai, String catatan){
+    void insertPesanan(String notaPesan, String namaPemesan, String tglAntar, String tglSelesai){
+        
         Connection conn = null;
         Statement stmt = null;
         
         String host = "jdbc:mysql://localhost:3306/projectPBO";
         String user = "root";
         String pass = null;
-        String sql = "insert into pesanan values('"+notaPesan+"','"+namaPemesan+"','"+jumlah+"','"
-                +tipePesanan+"','"+harga+"','"+tglAntar+"','"+tglSelesai+"','"+catatan+"','Waiting')";
+        String sql = "update pesanan set namaPemesan = '"+namaPemesan+"',tanggalAntar ='"+tglAntar+"',"
+                + "tanggalSelesai ='"+tglSelesai+"' where  notaPesanan = '"+notaPesan+"' and "
+                + "(tanggalSelesai <'"+tglSelesai+"' or tanggalSelesai is null)";
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(host,user,pass);
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    void insertPesanan(String notaPesan){
+        
+        Connection conn = null;
+        Statement stmt = null;
+        
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        String sql = "insert into pesanan (notaPesanan) values('"+notaPesan+"')";
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(host,user,pass);
+            stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    void insertSubPesnan(String noSubPesanan, String notaPesanan, 
+            double jumlah, String jenis,double harga ,String catatan){
+        Connection conn = null;
+        Statement stmt = null;
+        
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        String sql = "insert into subpesanan values('"+noSubPesanan+"','"+notaPesanan+"',"
+                + "'"+jumlah+"','"+jenis+"','"+harga+"','"+catatan+"')";
         
         try{
             Class.forName("com.mysql.jdbc.Driver");
@@ -203,5 +375,7 @@ public class Database {
             }
         }
     }
-    
+    public static void main(String[] args) {
+
+    }
 }

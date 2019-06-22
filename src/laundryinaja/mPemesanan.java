@@ -6,6 +6,7 @@
 package laundryinaja;
 
 import java.awt.Color;
+import java.awt.event.WindowEvent;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JFrame;
@@ -14,7 +15,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextArea;   
 import javax.swing.WindowConstants;
 
 /**
@@ -29,17 +30,35 @@ public class mPemesanan extends javax.swing.JFrame {
     private String filter="";
     private String status="";
     private String urut;
+    private boolean cari=false;
+    private String parameterCari ="";
+    private String kataCari ="";
+    private String Nota;
+    private String NamaNota;
+    private String tglSelesai;
     public mPemesanan() {
+        this.setNota();
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH/2);
         this.getContentPane().setBackground(Color.white);
+        this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         this.urut = "notaPesanan";
-
+        nama.setText(NamaNota);
+        lama.setText("2");
+        Proses.setVisible(false);
+        Selesai.setVisible(false);
+        Ambil.setVisible(false);
     }
     public mPemesanan(String filter,String urut) {
+        this.setNota();
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH/2);
         this.getContentPane().setBackground(Color.white);
+        this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        
+        Proses.setVisible(false);
+        Selesai.setVisible(false);
+        Ambil.setVisible(false);
         
         if(!filter.equals("Semua")){
             this.filter = filter;
@@ -61,8 +80,57 @@ public class mPemesanan extends javax.swing.JFrame {
                 this.urut = "notaPesanan";
                 break;
         }
+        nama.setText(NamaNota);
+        lama.setText("2");
     }
+    
+    public void fungsiCari(String parameter, String kata){
+        this.cari = true;
+        if(parameter.equals("Nama")){
+            this.parameterCari = "namaPemesan";
+            this.kataCari = kata;
+            
+        }else if(parameter.equals("Nota")){
+            this.parameterCari = "notaPesanan";
+            this.kataCari = kata;
 
+        }
+    }
+    
+    public void setNota(){
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet result = null;
+        
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        String sql = "select * from pesanan where status is null or status =''";
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(host,user,pass);
+            stmt = conn.createStatement();
+            result = stmt.executeQuery(sql);
+            if(result.first()){
+                this.Nota = result.getString("notaPesanan");
+                this.NamaNota = result.getString("namaPemesan");
+                this.tglSelesai = result.getString("tanggalSelesai");
+            }
+            
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                conn.close();
+                result.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        System.out.println(Nota);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,12 +141,11 @@ public class mPemesanan extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         nama = new javax.swing.JTextField();
         jumlah = new javax.swing.JTextField();
-        Pesan = new javax.swing.JButton();
+        Tambah = new javax.swing.JButton();
         lama = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         catatan = new javax.swing.JTextArea();
@@ -88,33 +155,38 @@ public class mPemesanan extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        Nota = new javax.swing.JTextField();
         Proses = new javax.swing.JButton();
         Selesai = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
+        Ambil = new javax.swing.JButton();
+        labelnota = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        Ambil = new javax.swing.JButton();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cbxFilter = new javax.swing.JComboBox<>();
+        cbxUrutkan = new javax.swing.JComboBox<>();
+        jPanel5 = new javax.swing.JPanel();
+        cbxCari = new javax.swing.JComboBox<>();
+        Cari = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableList = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        tKonfirmasi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel3.setText("Tipe");
-
         jLabel4.setText("Lama");
 
         jLabel5.setText("Catatan");
 
-        Pesan.setText("Pesan");
-        Pesan.addActionListener(new java.awt.event.ActionListener() {
+        Tambah.setText("Tambah");
+        Tambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PesanActionPerformed(evt);
+                TambahActionPerformed(evt);
             }
         });
 
@@ -140,78 +212,69 @@ public class mPemesanan extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 363, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Tambah))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(nama, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                                    .addComponent(lama)
+                                    .addComponent(jumlah))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tipe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(19, 19, 19))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addGap(21, 21, 21)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel1))
-                                    .addGap(46, 46, 46)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(nama)
-                                        .addComponent(jumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel5))
-                                    .addGap(38, 38, 38)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(lama)
-                                                .addComponent(tipe, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(jLabel7))
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(107, 107, 107)
-                                    .addComponent(Pesan)))))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(18, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 338, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(tipe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(lama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Tambah)
+                .addContainerGap())
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jLabel8)
-                    .addGap(18, 18, 18)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(jumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(tipe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(lama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7))
-                    .addGap(18, 18, 18)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel5)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addComponent(Pesan)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(193, Short.MAX_VALUE)))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-
-        Nota.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
         Proses.setText("Proses");
         Proses.addActionListener(new java.awt.event.ActionListener() {
@@ -227,7 +290,14 @@ public class mPemesanan extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setText("Nota");
+        Ambil.setText("Ambil");
+        Ambil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AmbilActionPerformed(evt);
+            }
+        });
+
+        labelnota.setText(" ");
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -254,12 +324,12 @@ public class mPemesanan extends javax.swing.JFrame {
             }
         });
         table.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 tableAncestorAdded(evt);
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
         });
         table.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -275,62 +345,89 @@ public class mPemesanan extends javax.swing.JFrame {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("DATA PEMESANAN");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Filter Status", "Semua", "Waiting", "Proses", "Selesai", "Diambil" }));
-        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+        cbxFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Filter Status", "Semua", "Baru", "Proses", "Selesai", "Diambil" }));
+        cbxFilter.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBox1ItemStateChanged(evt);
+                cbxFilterItemStateChanged(evt);
             }
         });
-        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
+        cbxFilter.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jComboBox1MouseClicked(evt);
+                cbxFilterMouseClicked(evt);
             }
         });
 
-        Ambil.setText("Ambil");
-        Ambil.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AmbilActionPerformed(evt);
-            }
-        });
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Urutkan", "Antar", "Selesai", "Nota", "Nama", " " }));
-        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
+        cbxUrutkan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Urutkan", "Antar", "Selesai", "Nota", "Nama", " " }));
+        cbxUrutkan.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBox2ItemStateChanged(evt);
+                cbxUrutkanItemStateChanged(evt);
             }
         });
+
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+
+        cbxCari.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cari", "Nota", "Nama" }));
+        cbxCari.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxCariItemStateChanged(evt);
+            }
+        });
+        cbxCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxCariActionPerformed(evt);
+            }
+        });
+
+        Cari.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Cari, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbxCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Cari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 1, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 195, Short.MAX_VALUE)
-                        .addComponent(Ambil, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(Proses, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Selesai, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(cbxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbxUrutkan, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
+                                .addComponent(Selesai, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Proses, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Ambil, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(labelnota, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 752, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel6)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Nota, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 752, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jPanel2Layout.setVerticalGroup(
@@ -338,25 +435,23 @@ public class mPemesanan extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel9)
-                .addGap(28, 28, 28)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Proses)
-                    .addComponent(Selesai))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelnota))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Ambil)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29))
+                    .addComponent(Proses)
+                    .addComponent(Selesai)
+                    .addComponent(cbxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxUrutkan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(64, 64, 64)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6)
-                        .addComponent(Nota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(62, Short.MAX_VALUE)))
+                    .addGap(93, 93, 93)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(64, Short.MAX_VALUE)))
         );
 
         jPanel3.setBackground(new java.awt.Color(0, 0, 0));
@@ -388,12 +483,75 @@ public class mPemesanan extends javax.swing.JFrame {
                     .addContainerGap(14, Short.MAX_VALUE)))
         );
 
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+
+        tableList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tableList.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                tableListAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        jScrollPane3.setViewportView(tableList);
+
+        jLabel3.setText("Item");
+
+        tKonfirmasi.setText("Konfirmasi");
+        tKonfirmasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tKonfirmasiActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(tKonfirmasi)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(tKonfirmasi)
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -402,64 +560,59 @@ public class mPemesanan extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void PesanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PesanActionPerformed
+    private void TambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahActionPerformed
         // TODO add your handling code here:
+        
         Pemesanan pesan = new Pemesanan();
         Database data = new Database();
-        String fnota = data.getNota(pesan.getTanggal());
+        String fnota = Nota;
         String fnama = nama.getText();
         double fjumlah = Double.parseDouble(jumlah.getText());
-        String ftipe =(String) tipe.getSelectedItem();
-        int flama = Integer.parseInt(lama.getText());
+        String ftipe =""+tipe.getSelectedItem();
+        int flama;
+        if(lama.getText().equals("")){
+            flama = 2;
+        }else{
+            flama = Integer.parseInt(lama.getText());
+        }
         double fharga = pesan.hitungHarga(pesan.harga(ftipe, flama),fjumlah);
         String ftglAntar = pesan.getTanggal();
         String ftglSelesai = pesan.kalkulasiSelesai(ftglAntar, flama);
         String fcatatan = catatan.getText();
+        data.insertPesanan(fnota, fnama,ftglAntar, ftglSelesai);
+        data.insertSubPesnan(data.getSubNota(Nota), Nota, fjumlah, ftipe,fharga, fcatatan);
+        mPemesanan frame = new mPemesanan("Baru",this.urut);
+        frame.setVisible(true);
+        dispose();
         
-        String Nota = "-------------------------------\n"
-                + "Nota Pemesanan\n"
-                + "-------------------------------\n\n"
-                + "Nama \t: "+fnama+"\n"
-                + "Jumlah \t: "+fjumlah+" "+ftipe+"\n"
-                + "Harga \t: "+fharga+"\n"
-                + "Antar \t: "+ftglAntar+"\n"
-                + "Selesai \t: "+ftglSelesai+"\n"
-                + "Catatan \t: "+fcatatan+"\n";
-        int dialogButton = JOptionPane.showConfirmDialog(null,new JTextArea(Nota),"Konfirmasi",JOptionPane.YES_NO_OPTION);
-        
-        if(dialogButton == JOptionPane.YES_OPTION){
-            data.insertPesanan(fnota, fnama, fjumlah , ftipe,fharga, ftglAntar, ftglSelesai , fcatatan);
-            mPemesanan frame = new mPemesanan("Waiting",this.urut);
-            frame.setVisible(true);
-            frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-            dispose();
-        }else if(dialogButton == JOptionPane.NO_OPTION){
-            
-        }
         /*
         NotaPemesanan frame = new NotaPemesanan(fnota,fnama,fjumlah,ftipe,fharga,ftglAntar,ftglSelesai,fcatatan);
         frame.setVisible(true);
         dispose();*/
 
-    }//GEN-LAST:event_PesanActionPerformed
+    }//GEN-LAST:event_TambahActionPerformed
 
     private void ProsesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProsesActionPerformed
         // TODO add your handling code here:
         switch(status){
-            case "Waiting":
-                int dialogButton = JOptionPane.showConfirmDialog(null,"Proses pesanan "+Nota.getText()+"?","Konfirmasi",JOptionPane.YES_NO_OPTION);
+            case "Baru":
+                int dialogButton = JOptionPane.showConfirmDialog(null,"Proses pesanan "+labelnota.getText()+"?","Konfirmasi",JOptionPane.YES_NO_OPTION);
                 if(dialogButton == JOptionPane.YES_OPTION){
                     Database db = new Database();
-                    db.updateStatus(Nota.getText(), "Proses");
+                    db.updateStatus(labelnota.getText(), "Proses");
                     mPemesanan frame = new mPemesanan(status,this.urut);
                     frame.setVisible(true);
                     frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -470,10 +623,10 @@ public class mPemesanan extends javax.swing.JFrame {
                 
                 break;
             case "Selesai":
-                JOptionPane.showMessageDialog(null,"Pesanan "+Nota.getText()+" sudah selesai");
+                JOptionPane.showMessageDialog(null,"Pesanan "+labelnota.getText()+" sudah selesai");
                 break;
             case "Diambil":
-                JOptionPane.showMessageDialog(null,"Pesanan "+Nota.getText()+" sudah diambil");
+                JOptionPane.showMessageDialog(null,"Pesanan "+labelnota.getText()+" sudah diambil");
                 break;
         }
         
@@ -483,14 +636,14 @@ public class mPemesanan extends javax.swing.JFrame {
     private void SelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelesaiActionPerformed
         // TODO add your handling code here:
         switch(status){
-            case "Waiting":
-                JOptionPane.showMessageDialog(null,"Proses dahulu pesanan "+Nota.getText());
+            case "Baru":
+                JOptionPane.showMessageDialog(null,"Proses dahulu pesanan "+labelnota.getText());
                 break;
             case "Proses":
-                int dialogButton = JOptionPane.showConfirmDialog(null,"Apakah Pesanan "+Nota.getText()+" sudah Selesai?","Konfirmasi",JOptionPane.YES_NO_OPTION);
+                int dialogButton = JOptionPane.showConfirmDialog(null,"Apakah Pesanan "+labelnota.getText()+" sudah Selesai?","Konfirmasi",JOptionPane.YES_NO_OPTION);
                 if(dialogButton ==  JOptionPane.YES_OPTION){
                     Database db = new Database();
-                    db.updateStatus(Nota.getText(), "Selesai");
+                    db.updateStatus(labelnota.getText(), "Selesai");
                     mPemesanan frame = new mPemesanan(status,this.urut);
                     frame.setVisible(true);
                     frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -501,12 +654,13 @@ public class mPemesanan extends javax.swing.JFrame {
                 }
                 break;
             case "Diambil":
-                JOptionPane.showMessageDialog(null,"Pesanan "+Nota.getText()+" sudah diambil");
+                JOptionPane.showMessageDialog(null,"Pesanan "+labelnota.getText()+" sudah diambil");
                 break;
         }
         
     }//GEN-LAST:event_SelesaiActionPerformed
 
+    
     private void tableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tableAncestorAdded
         // TODO add your handling code here:
         Connection conn = null;
@@ -514,13 +668,19 @@ public class mPemesanan extends javax.swing.JFrame {
         ResultSet result = null;
         ResultSet row = null;
 
-        DefaultTableModel tab = new DefaultTableModel(new String[]{"Nota", "Nama","Jumlah",
-            "Tipe","Harga","Antar","Selesai","Catatan","Status"}, 0);
+        DefaultTableModel tab = new DefaultTableModel(new String[]{"Nota", "Nama","Antar",
+            "Selesai","Total","Status"}, 0);
 
         String host = "jdbc:mysql://localhost:3306/projectPBO";
         String user = "root";
         String pass = null;
-        String sql = "select*from pesanan where status like '%"+filter+"%' order by "+this.urut+" desc";
+        String sql ="";
+        if(cari){
+            sql = "select*from pesanan where "+parameterCari+" like '%"+kataCari+"%'";
+        }else{
+            sql = "select*from pesanan where status like '%"+filter+"%' order by "+this.urut+" desc";
+        }
+        
         try{
 
         Class.forName("com.mysql.jdbc.Driver");
@@ -530,14 +690,11 @@ public class mPemesanan extends javax.swing.JFrame {
         while(result.next()){
             String nota = result.getString("notaPesanan");
             String nama = result.getString("namaPemesan");
-            String jml = result.getString("jumlah");
-            String tipe = result.getString("tipePemesanan");
-            String harga = result.getString("harga");
             String tglA = result.getString("tanggalAntar");
             String tglS = result.getString("tanggalSelesai");
-            String ctt = result.getString("catatan");
+            String total = result.getString("total");
             String status = result.getString("status");
-            tab.addRow(new Object []{nota,nama,jml,tipe,harga,tglA,tglS,ctt,status});
+            tab.addRow(new Object []{nota,nama,tglA,tglS,total,status});
         }
         table.setModel(tab);
         }catch(ClassNotFoundException | SQLException e){
@@ -557,33 +714,88 @@ public class mPemesanan extends javax.swing.JFrame {
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
         // TODO add your handling code here:
         int row = table.getSelectedRow();
-        Nota.setText(""+table.getValueAt(row,0));
-        status = ""+table.getValueAt(row, 8);
+        labelnota.setText(""+table.getValueAt(row,0));
+        status = ""+table.getValueAt(row, 5);
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet result = null;
+        double subtotal = 0;
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        String sqlNota = "select * from subpesanan where notaPesanan = '"+labelnota.getText()+"'";
+        String nota ="<html><hr>Nota : "+labelnota.getText()+"<hr><br>"
+                + "<table width = 200>"
+                + "<tr><td>Status</td><td>"+table.getValueAt(row,5)+"</td><td></td></tr>"
+                + "<tr><td>Nama </td><td>: "+table.getValueAt(row,1)+"</td><td></td></tr>"
+                + "<tr><td colspan='3'>Item</td></tr>";
+        int i = 1;
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(host,user,pass);
+            stmt = conn.createStatement();
+            result = stmt.executeQuery(sqlNota);
+            while(result.next()){
+                subtotal += result.getDouble("harga");
+                nota += "<tr><td>"+i+"</td><td>"+result.getString("jumlah")+" "+result.getString("jenis")
+                        +"</td><td>"+result.getDouble("harga")+"</td></tr>"
+                        + "</tr><td></td><td>Ctt: '"+result.getString("catatan")+"'</td><td></td></tr>";
+                i++;
+            }
+            
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        String test = ""+table.getValueAt(row,5);
+        switch(test){
+            case "Baru":
+                Proses.setVisible(true);
+                break;
+            case "Proses":
+                Selesai.setVisible(true);
+                break;
+            case "Selesai":
+                Ambil.setVisible(true);
+        }
+        nota += "<tr></tr>"
+                + "<tr><td>Selesai</td><td>"+table.getValueAt(row,3)+"</td><td></td></tr>"
+                + "<tr><td>Total </td><td></td><td>"+subtotal+"</td></tr>"
+                + "</table></html>";
+        JOptionPane.showMessageDialog(null,nota);
+        
     }//GEN-LAST:event_tableMouseClicked
 
-    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+    private void cbxFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxFilterItemStateChanged
         // TODO add your handling code here:z
         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
         //Do any operations you need to do when an item is selected.
             System.out.println(this.urut);
-            mPemesanan menu = new mPemesanan(""+jComboBox1.getSelectedItem(),this.urut);
+            mPemesanan menu = new mPemesanan(""+cbxFilter.getSelectedItem(),this.urut);
             menu.setVisible(true);
             this.dispose();
         } else if(evt.getStateChange() == java.awt.event.ItemEvent.DESELECTED){
         //Do any operations you need to do when an item is de-selected.
         }
         
-    }//GEN-LAST:event_jComboBox1ItemStateChanged
+    }//GEN-LAST:event_cbxFilterItemStateChanged
 
-    private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
+    private void cbxFilterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbxFilterMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1MouseClicked
+    }//GEN-LAST:event_cbxFilterMouseClicked
 
-    private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox2ItemStateChanged
+    private void cbxUrutkanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxUrutkanItemStateChanged
         // TODO add your handling code here:
         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
         //Do any operations you need to do when an item is selected.
-            mPemesanan menu = new mPemesanan(this.filter,""+jComboBox2.getSelectedItem());
+            mPemesanan menu = new mPemesanan(this.filter,""+cbxUrutkan.getSelectedItem());
             menu.setVisible(true);
             this.dispose();
             
@@ -591,30 +803,30 @@ public class mPemesanan extends javax.swing.JFrame {
         //Do any operations you need to do when an item is de-selected.
             
         }
-    }//GEN-LAST:event_jComboBox2ItemStateChanged
+    }//GEN-LAST:event_cbxUrutkanItemStateChanged
 
     private void AmbilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AmbilActionPerformed
         // TODO add your handling code here:
         switch(status){
-            case "Waiting":
-                JOptionPane.showMessageDialog(null,"Pesanan "+Nota.getText()+" belum diproses");
+            case "Baru":
+                JOptionPane.showMessageDialog(null,"Pesanan "+labelnota.getText()+" belum diproses");
                 break;
             case "Proses":
-                JOptionPane.showMessageDialog(null,"Pesanan "+Nota.getText()+" sedang dalam proses");
+                JOptionPane.showMessageDialog(null,"Pesanan "+labelnota.getText()+" sedang dalam proses");
                 break;
             case "Selesai":
                 Connection conn = null;
                 Statement stmt = null;
                 ResultSet result = null;
-                String nota = Nota.getText();
+                String nota = labelnota.getText();
                 String nama ="";
-                int jml =0;
-                String tipe= "";
                 double harga=0;
                 String host = "jdbc:mysql://localhost:3306/projectPBO";
                 String user = "root";
                 String pass = null;
                 String sql = "select*from pesanan where notaPesanan='"+nota+"'";
+                String item = "";
+                String tanggal ="";
                 try{
 
                     Class.forName("com.mysql.jdbc.Driver");
@@ -623,9 +835,16 @@ public class mPemesanan extends javax.swing.JFrame {
                     result = stmt.executeQuery(sql);
                     while(result.next()){
                         nama = result.getString("namaPemesan");
-                        jml = result.getInt("jumlah");
-                        tipe = result.getString("tipePemesanan");
-                        harga = result.getDouble("harga");
+                        harga = result.getDouble("total");
+                        tanggal = result.getString("tanggalAntar");
+                    }
+                    result = stmt.executeQuery("select * from subpesanan where notaPesanan ='"+nota+"'");
+                    int i = 1;
+                    while(result.next()){
+                        item = "<tr><td>"+i+"</td><td>"+result.getString("jumlah")+" "
+                                +result.getString("jenis")+"</td><td>"+result.getDouble("harga")+"</td></tr>"
+                                + "<tr><td></td><td>"+result.getString("catatan")+"</td><td></td></tr>";
+                        i++;
                     }
                 }catch(ClassNotFoundException | SQLException e){
                     e.printStackTrace();
@@ -638,12 +857,14 @@ public class mPemesanan extends javax.swing.JFrame {
                         e.printStackTrace();
                     }
                 }
-                String notaPengambilan = "-------------------------------\n"
-                + "Nota "+nota+"\n"
-                + "-------------------------------\n\n"
-                + "Nama \t: "+nama+"\n"
-                + "Jumlah \t: "+jml+" "+tipe+"\n"
-                + "Harga \t: "+harga+"\n";
+                String notaPengambilan = "<html><hr>"
+                        + "Nota "+nota+"<hr>"
+                        + "<br><table width = 300>"
+                        + "<tr><td>Nama </td><td>: "+nama+"</td><td></td></tr>"
+                        + "<tr><td colspan='3'>Item</td></tr>"
+                        + item
+                        + "<tr><td>Total </td><td></td><td>: "+harga+"</td></tr>"
+                        + "</table></html>";
                 /*NotaPengambilan fnota = new NotaPengambilan(nota,nama,jml,(harga*jml),tipe);
                 fnota.setVisible(true);
                 dispose();*/
@@ -651,12 +872,11 @@ public class mPemesanan extends javax.swing.JFrame {
                 if(dialogButton ==  JOptionPane.YES_OPTION){
                     Database data = new Database();
                     Pemesanan tgl = new Pemesanan();
-                    String desc = "cucian "+jumlah+" "+tipe+" Atas Nama "+nama;
+                    String desc = "Pesanan Tanggal"+tanggal+" Atas Nama "+nama;
                     data.updateStatus(nota, "Diambil");
                     data.insertLaporan(nota, tgl.getTanggal(), desc, harga);
                     mPemesanan frame = new mPemesanan(status,this.urut);
                     frame.setVisible(true);
-                    frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
                     dispose();
                     break;
                 }else if(dialogButton ==  JOptionPane.NO_OPTION){
@@ -666,6 +886,125 @@ public class mPemesanan extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_AmbilActionPerformed
+
+    private void cbxCariItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxCariItemStateChanged
+        // TODO add your handling code here:
+        if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+        //Do any operations you need to do when an item is selected.
+            mPemesanan menu = new mPemesanan(this.filter,this.urut);
+            menu.fungsiCari(""+cbxCari.getSelectedItem(),Cari.getText());
+            menu.setVisible(true);
+            dispose();
+            
+        } else if(evt.getStateChange() == java.awt.event.ItemEvent.DESELECTED){
+        //Do any operations you need to do when an item is de-selected.
+            
+        }
+        
+    }//GEN-LAST:event_cbxCariItemStateChanged
+
+    private void cbxCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxCariActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxCariActionPerformed
+
+    private void tableListAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tableListAncestorAdded
+        // TODO add your handling code here:
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet result = null;
+        ResultSet row = null;
+
+        DefaultTableModel tab = new DefaultTableModel(new String[]{"No","Jumlah",
+            "Tipe","Harga","Catatan"}, 0);
+
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        String sql ="select*from subpesanan where notaPesanan ='"+Nota+"'";
+        
+        try{
+
+        Class.forName("com.mysql.jdbc.Driver");
+        conn = DriverManager.getConnection(host,user,pass);
+        stmt = conn.createStatement();
+        result = stmt.executeQuery(sql);
+        int i = 1;
+        while(result.next()){
+            String jml = result.getString("jumlah");
+            String tipe = result.getString("jenis");
+            String harga = result.getString("harga");
+            String ctt = result.getString("catatan");
+            tab.addRow(new Object []{i++,jml,tipe,harga,ctt});
+        }
+        tableList.setModel(tab);
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                result.close();
+                stmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_tableListAncestorAdded
+
+    private void tKonfirmasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tKonfirmasiActionPerformed
+        // TODO add your handling code here:
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet result = null;
+        double subtotal = 0;
+        String host = "jdbc:mysql://localhost:3306/projectPBO";
+        String user = "root";
+        String pass = null;
+        String sqlNota = "select * from subpesanan where notaPesanan = '"+Nota+"'";
+        String nota ="<html><hr>Nota : "+Nota+"<hr><br>"
+                + "<table width = 200>"
+                + "<tr><td>Nama </td><td>: "+NamaNota+"</td><td></td></tr>"
+                + "<tr><td colspan='3'>Item</td></tr>";
+        int i = 1;
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(host,user,pass);
+            stmt = conn.createStatement();
+            result = stmt.executeQuery(sqlNota);
+            while(result.next()){
+                subtotal += result.getDouble("harga");
+                nota += "<tr><td>"+i+"</td><td>"+result.getString("jumlah")+" "+result.getString("jenis")
+                        +"</td><td>"+result.getDouble("harga")+"</td></tr>"
+                        + "</tr><td></td><td>Ctt: '"+result.getString("catatan")+"'</td><td></td></tr>";
+                i++;
+            }
+            
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        nota += "<tr></tr>"
+                + "<tr><td>Selesai</td><td>"+tglSelesai+"</td><td></td></tr>"
+                + "<tr><td>Total </td><td></td><td>"+subtotal+"</td></tr>"
+                + "</table></html>";
+        int dialogButton = JOptionPane.showConfirmDialog(null,nota,"Konfirmasi",JOptionPane.YES_NO_OPTION);
+        if(dialogButton ==  JOptionPane.YES_OPTION){
+            Database data = new Database();
+            Pemesanan tgl = new Pemesanan();
+            data.Konfirmasi(Nota, subtotal);
+            mPemesanan frame = new mPemesanan("Baru",this.urut);
+            frame.setVisible(true);
+            dispose();
+        }else if(dialogButton ==  JOptionPane.NO_OPTION){
+                    
+        }
+    }//GEN-LAST:event_tKonfirmasiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -704,32 +1043,38 @@ public class mPemesanan extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Ambil;
-    private javax.swing.JTextField Nota;
-    private javax.swing.JButton Pesan;
+    private javax.swing.JTextField Cari;
     private javax.swing.JButton Proses;
     private javax.swing.JButton Selesai;
+    private javax.swing.JButton Tambah;
     private javax.swing.JTextArea catatan;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> cbxCari;
+    private javax.swing.JComboBox<String> cbxFilter;
+    private javax.swing.JComboBox<String> cbxUrutkan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField jumlah;
+    private javax.swing.JLabel labelnota;
     private javax.swing.JTextField lama;
     private javax.swing.JTextField nama;
+    private javax.swing.JButton tKonfirmasi;
     private javax.swing.JTable table;
+    private javax.swing.JTable tableList;
     private javax.swing.JComboBox<String> tipe;
     // End of variables declaration//GEN-END:variables
 }

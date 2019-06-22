@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -28,6 +29,7 @@ public class mKeuangan extends javax.swing.JFrame {
     private String tahun="";
     public mKeuangan() {
         initComponents();
+        this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         
     }
     public mKeuangan(String bulan, String tahun) {
@@ -35,6 +37,7 @@ public class mKeuangan extends javax.swing.JFrame {
         this.bulan = bulan;
         this.tahun = tahun;
         title.setText("LAPORAN KEUANGAN BULAN "+bulan.substring(1)+" "+tahun);
+        this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         
     }
 
@@ -166,12 +169,12 @@ public class mKeuangan extends javax.swing.JFrame {
             }
         ));
         tLaporan.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 tLaporanAncestorAdded(evt);
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
         });
         jScrollPane1.setViewportView(tLaporan);
@@ -224,6 +227,7 @@ public class mKeuangan extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void tLaporanAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tLaporanAncestorAdded
@@ -337,15 +341,11 @@ public class mKeuangan extends javax.swing.JFrame {
     private javax.swing.JLabel detail;
     private javax.swing.JComboBox<String> ibulan;
     private javax.swing.JTextField itahun;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton rLaporan;

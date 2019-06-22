@@ -19,7 +19,7 @@ public class Pemesanan {
         return totalHarga;
     }
     String kalkulasiSelesai(String tglAntar,int lama){
-        String tglSelesai = "19-02-02";
+        String tglSelesai = "";
         int tmp = Integer.parseInt(tglAntar.substring(6));
         int bulan = Integer.parseInt(tglAntar.substring(3,5));
         String hasil = tglAntar.substring(0,6);

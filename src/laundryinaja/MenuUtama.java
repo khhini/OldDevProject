@@ -44,9 +44,9 @@ public class MenuUtama extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        tPengeluaran = new javax.swing.JButton();
+        tPemesanan = new javax.swing.JButton();
+        tKeuangan = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,7 +61,7 @@ public class MenuUtama extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("LAUNDRIIN AJA");
+        jLabel1.setText("LAUNDRY IN AJA");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -86,27 +86,27 @@ public class MenuUtama extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(0, 51, 102));
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("PENGELUARAN");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        tPengeluaran.setBackground(new java.awt.Color(255, 255, 255));
+        tPengeluaran.setText("PENGELUARAN");
+        tPengeluaran.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                tPengeluaranActionPerformed(evt);
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("PEMESANAN");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        tPemesanan.setBackground(new java.awt.Color(255, 255, 255));
+        tPemesanan.setText("PEMESANAN");
+        tPemesanan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                tPemesananActionPerformed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("KEUANGAN");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        tKeuangan.setBackground(new java.awt.Color(255, 255, 255));
+        tKeuangan.setText("KEUANGAN");
+        tKeuangan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                tKeuanganActionPerformed(evt);
             }
         });
 
@@ -116,21 +116,21 @@ public class MenuUtama extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(80, 80, 80)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tPemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tPengeluaran, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addComponent(tKeuangan, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(103, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(13, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tPemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tKeuangan, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tPengeluaran, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -162,9 +162,9 @@ public class MenuUtama extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(97, Short.MAX_VALUE)
+                .addContainerGap(89, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,32 +174,39 @@ public class MenuUtama extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void tPemesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tPemesananActionPerformed
         // TODO add your handling code here:
+        Pemesanan pesan = new Pemesanan();
+        Database data = new Database();
+        String  nota = data.getNota(pesan.getTanggal());
+        data.insertPesanan(nota);
+        menuPemesanan.setNota();
         menuPemesanan.dispose();
         menuPengeluaran.dispose();
         menuKeuangan.dispose();
         menuPemesanan.setVisible(true);
+        
         menuPemesanan.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_tPemesananActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void tPengeluaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tPengeluaranActionPerformed
         // TODO add your handling code here:
         menuPengeluaran.dispose();
         menuKeuangan.dispose();
         menuPemesanan.dispose();
         menuPengeluaran.setVisible(true);
         menuPengeluaran.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_tPengeluaranActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void tKeuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tKeuanganActionPerformed
         // TODO add your handling code here:
+        
         menuPengeluaran.dispose();
         menuKeuangan.dispose();
         menuPemesanan.dispose();
         menuKeuangan.setVisible(true);
         menuKeuangan.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_tKeuanganActionPerformed
 
     /**
      * @param args the command line arguments
@@ -238,13 +245,13 @@ public class MenuUtama extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton tKeuangan;
+    private javax.swing.JButton tPemesanan;
+    private javax.swing.JButton tPengeluaran;
     // End of variables declaration//GEN-END:variables
 }
