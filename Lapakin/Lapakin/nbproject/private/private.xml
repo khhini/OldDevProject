@@ -3,46 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/toko/DTokoTransaksiServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/model/ModelUser.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/admin/pelanggan.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/member/DetailTransaksiServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/pemilik_toko/ubah_toko.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/admin/dashboard.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/admin/DAdminTambahTokoServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/pemilik_toko/dashboard.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/daftar_transaksi.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/pemilik_toko/akun.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/admin/pemilik_toko.jsp</file>
             <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/LoginServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/toko/DTokoDetailTransaksiServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/admin/detail_toko.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/model/ModelProduk.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/member/ListTransaksiServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/model/ModelTransaksi.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/member/HomeServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/toko/DashTokoServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/hasil_bayar.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/pemilik_toko/transaksi.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/toko/DTokoProdukServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/masuk.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/admin/DAdminPelangganServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/pemilik_toko/detail_transaksi.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/toko.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/member/KeranjangServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/detail_transaksi.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/index.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/admin/akun.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/daftar.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/pemilik_toko/ubah_barang.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/admin/DashAdminServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/pemilik_toko/tambah_barang.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/admin/DAdminTokoServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/toko/DTokoAkunServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/toko/DTokoUbahProdukServlet.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/obj/User.java</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/web/keranjang.jsp</file>
-            <file>file:/home/kiki/Documents/kampus/lapakin/Lapakin/Lapakin/src/java/Controller/admin/DAdminDetailTokoServlet.java</file>
         </group>
     </open-files>
 </project-private>
