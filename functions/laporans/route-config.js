@@ -1,10 +1,14 @@
 const { create, all, validators, get, remove } = require("./laporan");
 const express = require("express");
-// const { isAuthenticated } = require("../auth/authentitated");
-// const { isAuthorized } = require("../auth/isAuthorized");
+const { isAuthenticated } = require("../auth/authentitated");
+const { isAuthorized } = require("../auth/isAuthorized");
 const router = new express.Router();
 
-router.post("/", validators, create);
+router.post("/", validators, [
+  isAuthenticated,
+  isAuthorized({ hasRole: ["user"] }),
+  create,
+]);
 
 router.get("/", all);
 
