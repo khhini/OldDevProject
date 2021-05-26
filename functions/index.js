@@ -7,7 +7,7 @@ const userRouter = require("./users/route-config");
 const laporanRouter = require("./laporans/route-config");
 
 
-const serviceAccount = require("../tensile-ship-312415-44c2e1f33da2.json");
+const serviceAccount = require("./tensile-ship-312415-44c2e1f33da2.json");
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -26,5 +26,9 @@ app.use(cors({ origin: true }));
 
 app.use("/users", userRouter);
 app.use("/laporans", laporanRouter);
+
+app.get("/", async (req, res) => {
+  res.status(200).send("Hello from API");
+});
 
 exports.api = functions.https.onRequest(app);
