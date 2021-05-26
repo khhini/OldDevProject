@@ -41,7 +41,7 @@ exports.create = async (req, res) =>{
 
   await admin.firestore().collection("laporans").doc(id).update(data);
 
-  return res.status(201).send(JSON.stringify({ id, data }));
+  return res.status(201).send(JSON.stringify({ id }));
 };
 
 

@@ -6,7 +6,7 @@ const router = new express.Router();
 
 router.post("/", validators, [
   isAuthenticated,
-  isAuthorized({ hasRole: ["user"] }),
+  isAuthorized({ hasRole: ["admin", "user"] }),
   create,
 ]);
 
@@ -14,6 +14,10 @@ router.get("/", all);
 
 router.get("/:id", get);
 
-router.delete("/:id", remove);
+router.delete("/:id", [
+  isAuthenticated,
+  isAuthorized({ hasRole: ["admin", "user"] }),
+  remove,
+]);
 
 module.exports = router;
