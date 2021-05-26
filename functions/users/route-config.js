@@ -5,15 +5,11 @@ const { isAuthorized } = require("../auth/isAuthorized");
 const router = new express.Router();
 
 
-router.post("/", [
-  isAuthenticated,
-  isAuthorized({ hasRole: ["admin", "user"] }),
-  create,
-]);
+router.post("/", create);
 
 router.get("/", [
   isAuthenticated,
-  isAuthorized({ hasRole: ["admin", "user"], alloSameUser: true }),
+  isAuthorized({ hasRole: ["admin"], alloSameUser: true }),
   all,
 ]);
 
