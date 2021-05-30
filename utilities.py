@@ -9,8 +9,9 @@ from object_detection.utils import visualization_utils as viz_utils
 import numpy as np
 import configparser
 
+config_file = os.path.join(os.path.dirname(__file__), 'config.ini')
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(config_file)
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = config['GCP']['GOOGLE_APPLICATION_CREDENTIALS']
 
