@@ -4,11 +4,16 @@ import cv2
 import re
 import base64
 from utilities import predict_image
+import json
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def get_request():
+    return json.dumps({'message': 'Hello World!'})
+
 @app.route('/', methods=['POST'])
-def hello_world():
+def post_request():
     req = request.get_json()
 
     # Prepare Request Data
@@ -28,4 +33,4 @@ def hello_world():
         res = base64.b64encode(f.read())
 
     # return im_b64
-    return 'data:image/jpeg;base64,'+res.decode("utf-8")
+    return json.dumps({'predicted_image': 'data:image/jpeg;base64,'+res.decode("utf-8")})
