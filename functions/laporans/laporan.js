@@ -76,9 +76,20 @@ exports.get = async (req, res) => {
 
 
 exports.remove = async (req, res) => {
+  // delete Image from Cloud Storage
+  const snapshot = await admin.firestore()
+      .collection("laporans").doc(req.params.id).get();
+  let { foto } = snapshot.data();
+  foto = foto.replace(/.+public\//, "");
+  deleteImageFromStorage(foto).catch(console.error);
+  // delete data from Firestore
   await admin.firestore()
       .collection("laporans").doc(req.params.id).delete();
-  return res.status(200).send();
+  return res.status(204).send();
+};
+
+const deleteImageFromStorage = async (fileName) => {
+  await admin.storage().bucket().file("public/"+fileName).delete();
 };
 
 const uploadAndGetPublicFile = async (fileName, data) => {
