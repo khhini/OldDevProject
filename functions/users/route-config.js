@@ -1,9 +1,9 @@
-const { create, all, get, patch, remove } = require("./users");
+const { create, all, get, patch, remove, getLaporan } = require("./users");
 const express = require("express");
 const { isAuthenticated } = require("../auth/authentitated");
 const { isAuthorized } = require("../auth/isAuthorized");
 const router = new express.Router();
-
+const getUserLaporan = new express.Router();
 
 router.post("/", create);
 
@@ -31,4 +31,10 @@ router.delete("/:id", [
   remove,
 ]);
 
-module.exports = router;
+getUserLaporan.get("/", [
+  isAuthenticated,
+  isAuthorized({ hasRole: ["admin", "user"], alloSameUser: true }),
+  getLaporan,
+]);
+
+module.exports = { router, getUserLaporan };

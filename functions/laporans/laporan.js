@@ -1,7 +1,7 @@
 const admin = require("firebase-admin");
 const { body, validationResult } = require("express-validator");
 const mime = require("mime-types");
-const http = require("http");
+const http = require("https");
 
 exports.validators = [
   body("alamat").notEmpty().withMessage("alamat harus diisi"),
@@ -159,8 +159,8 @@ const requestPrediction = (id, foto, data) =>{
   foto = JSON.stringify({ foto });
 
   const options = {
-    hostname: "localhost",
-    port: 5000,
+    hostname: "predictimage-ivzsbvjqlq-et.a.run.app",
+    port: 443,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -194,7 +194,7 @@ const requestPrediction = (id, foto, data) =>{
     });
   });
 
-  predictReq.on("error", (error) => {
+  predictReq.on("error", (error) => {W
     console.error(error);
   });
 
