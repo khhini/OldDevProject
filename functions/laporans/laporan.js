@@ -194,7 +194,7 @@ const requestPrediction = (id, foto, data) =>{
     });
   });
 
-  predictReq.on("error", (error) => {W
+  predictReq.on("error", (error) => {
     console.error(error);
   });
 
