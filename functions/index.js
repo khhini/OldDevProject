@@ -24,8 +24,9 @@ app.use(bodyParser.json());
 app.use(cors({ origin: true }));
 
 
-app.use("/users", userRouter);
+app.use("/users", userRouter.router);
 app.use("/laporans", laporanRouter);
+app.use("/laporan_user", userRouter.getUserLaporan);
 
 app.get("/", async (req, res) => {
   res.status(200).send("Hello from API");

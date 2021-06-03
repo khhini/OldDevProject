@@ -1,7 +1,7 @@
 const admin = require("firebase-admin");
 const { body, validationResult } = require("express-validator");
 const mime = require("mime-types");
-const http = require("http");
+const http = require("https");
 
 exports.validators = [
   body("alamat").notEmpty().withMessage("alamat harus diisi"),
@@ -115,6 +115,29 @@ exports.remove = async (req, res) => {
   }
 };
 
+exports.patch = async (req, res) =>{
+  try {
+    const { authorization } = req.headers;
+    const split = authorization.split(" ");
+    const token = split[1];
+    const decodeToken = await admin.auth().verifyIdToken(token);
+
+    const { id } = req.params;
+    const data = req.body;
+
+    data.id_petugas = decodeToken.uid;
+    await admin.firestore().collection("laporans").doc(id).update(data);
+
+    const snapshot = await admin.firestore()
+        .collection("laporans").doc(id).get();
+    const updatedData = snapshot.data();
+
+    return res.status(201).send({ updatedData });
+  } catch (err) {
+    return handleError(res, err);
+  }
+};
+
 const deleteImageFromStorage = async (fileName) => {
   await admin.storage().bucket().file("public/"+fileName).delete();
 };
@@ -160,7 +183,7 @@ const requestPrediction = (id, foto, data) =>{
 
   const options = {
     hostname: "localhost",
-    port: 5000,
+    port: 443,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

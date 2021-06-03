@@ -30,6 +30,7 @@ exports.isAuthenticated = async (req, res, next) => {
     return next();
   } catch (err) {
     console.error(`${err.code} -  ${err.message}`);
-    return res.status(401).send({ message: "Unauthorized" });
+    return res.status(403)
+        .send({ "error_code": err.code, "message": err.message });
   }
 };

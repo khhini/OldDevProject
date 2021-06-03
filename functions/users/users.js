@@ -71,6 +71,38 @@ exports.remove = async (req, res) => {
   }
 };
 
+exports.getLaporan = async (req, res) => {
+  try {
+    const { authorization } = req.headers;
+    const split = authorization.split(" ");
+    const token = split[1];
+    const decodeToken = await admin.auth().verifyIdToken(token);
+    // eslint-disable-next-line camelcase
+    const id_pelapor = decodeToken.uid;
+
+    const snapshot = await admin.firestore()
+        .collection("laporans").where("id_pelapor", "==", id_pelapor).get();
+
+    // eslint-disable-next-line prefer-const
+    let laporan = [];
+    snapshot.forEach((doc) => {
+      const id = doc.id;
+      const d = doc.data();
+      laporan.push({ id, ...d });
+    });
+    // const id = snapshot.id;
+    // const data = snapshot.data();
+
+    // if (!data) {
+    //   return res.status(404).send("data not found");
+    // }
+
+    return res.status(200).send(JSON.stringify({ laporan }));
+  } catch (err) {
+    return handleError(res, err);
+  }
+};
+
 function mapUser(user) {
   const customClaims = (user.customClaims || { role: "" });
   const role = customClaims.role ? customClaims.role : "";

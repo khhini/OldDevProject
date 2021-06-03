@@ -1,4 +1,4 @@
-const { create, all, validators, get, remove } = require("./laporan");
+const { create, all, validators, get, remove, patch } = require("./laporan");
 const express = require("express");
 const { isAuthenticated } = require("../auth/authentitated");
 const { isAuthorized } = require("../auth/isAuthorized");
@@ -13,6 +13,12 @@ router.post("/", validators, [
 router.get("/", all);
 
 router.get("/:id", get);
+
+router.patch("/:id", [
+  isAuthenticated,
+  isAuthorized({ hasRole: ["admin", "user"] }),
+  patch,
+]);
 
 router.delete("/:id", [
   isAuthenticated,
