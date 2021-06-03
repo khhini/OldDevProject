@@ -182,7 +182,7 @@ const requestPrediction = (id, foto, data) =>{
   foto = JSON.stringify({ foto });
 
   const options = {
-    hostname: "predictimage-ivzsbvjqlq-et.a.run.app",
+    hostname: "localhost",
     port: 443,
     method: "POST",
     headers: {
