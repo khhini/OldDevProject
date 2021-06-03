@@ -115,6 +115,29 @@ exports.remove = async (req, res) => {
   }
 };
 
+exports.patch = async (req, res) =>{
+  try {
+    const { authorization } = req.headers;
+    const split = authorization.split(" ");
+    const token = split[1];
+    const decodeToken = await admin.auth().verifyIdToken(token);
+
+    const { id } = req.params;
+    const data = req.body;
+
+    data.id_petugas = decodeToken.uid;
+    await admin.firestore().collection("laporans").doc(id).update(data);
+
+    const snapshot = await admin.firestore()
+        .collection("laporans").doc(id).get();
+    const updatedData = snapshot.data();
+
+    return res.status(201).send({ updatedData });
+  } catch (err) {
+    return handleError(res, err);
+  }
+};
+
 const deleteImageFromStorage = async (fileName) => {
   await admin.storage().bucket().file("public/"+fileName).delete();
 };
